@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import firebase from '../../firebase';
+import md5 from 'md5';
 import {NavLink} from 'react-router-dom'
 import {
   Grid,
@@ -19,6 +20,7 @@ class Register extends Component {
     passwordConfirm: '',
     errors: [],
     loading: false,
+    usersRef: firebase.database().ref('users')
   }
 
   handlerChange = (e) => {
@@ -59,6 +61,13 @@ class Register extends Component {
     }
   }
 
+  saveUser = createdUser => {
+    return this.state.usersRef.child(createdUser.user.uid).set({
+      name: createdUser.user.displayName,
+      avatar: createdUser.user.photoURL,
+    })
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     if (this.isFormValid()) {
@@ -68,7 +77,19 @@ class Register extends Component {
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(createdUser => {
           console.log(createdUser);
-          this.setState({ loading: false })
+          createdUser.user.updateProfile({
+            displayName: this.state.username,
+            photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+          })
+          .then(()=> {
+                // 1 this.setState({ loading: false })
+                // 2 save user
+                this.saveUser(createdUser).then(()=> console.log('user saved'))
+          })
+          .catch(err => {
+            console.error(err);
+            this.setState({ errors: this.state.errors.concat(err), loading: false })
+          })
         })
         .catch(err => {
           console.error(err);
@@ -77,6 +98,10 @@ class Register extends Component {
     }
   }
 
+  handleInput = (errors, inputName) => {
+    return errors.some(el => el.message.toLowerCase().includes(inputName)) ? 'error' : ''
+   }
+ 
 
 
   render() {
