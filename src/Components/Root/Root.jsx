@@ -6,6 +6,7 @@ import firebase from '../../firebase';
 import App from '../App';
 import Login from '../Auth/Login';
 import Registration from '../Auth/Register';
+import Spiner from '../Spiner/Spiner';
 class Root extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -19,7 +20,7 @@ class Root extends Component {
 
 
   render() {
-    return (
+    return this.props.isLoading ? <Spiner/> : (
       <Switch>
         <Route exact path='/' component={App}/>
         <Route path='/login' component={Login}/>
