@@ -112,7 +112,7 @@ class Register extends Component {
         <Grid.Column style={{
           maxWidth: 450
         }}>
-          <Header as='h2' icon color='orange' textAlign='center'>
+          <Header as='h1' icon color='orange' textAlign='center'>
             <Icon name='comment alternate' color='orange'/>
             Register for Slack Clone
           </Header>
