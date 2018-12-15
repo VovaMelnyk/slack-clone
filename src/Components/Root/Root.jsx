@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Switch, Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {setUser} from '../../redux/actions/'
+import {setUser, clearUser} from '../../redux/actions/'
 import firebase from '../../firebase';
 import App from '../App';
 import Login from '../Auth/Login';
@@ -14,6 +14,9 @@ class Root extends Component {
         console.log(user);
         this.props.setUser(user);
         this.props.history.push('/');
+      } else {
+        this.props.history.push('/login');
+        this.props.clearUser()
       }
     })
   }
@@ -40,6 +43,9 @@ function MDTP (dispatch) {
   return {
     setUser: function(user) {
       dispatch(setUser(user))
+    },
+    clearUser: function(){
+      dispatch(clearUser())
     }
   }
 }
