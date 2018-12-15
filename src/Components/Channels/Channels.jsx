@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react';
+import firebase from '../../firebase';
+import {connect} from 'react-redux';
 
 class Channels extends Component {
 
@@ -8,6 +10,7 @@ class Channels extends Component {
         modal: false,
         channelName: '',
         channelDetails: '',
+        channelsRef: firebase.database().ref('channels'),
     }
 
     openModal = () => {
@@ -28,6 +31,43 @@ class Channels extends Component {
         })
     }
 
+    addChannel = () => {
+        const {channelsRef, channelName, channelDetails} = this.state;
+        const key = channelsRef.push().key;
+        const newChannel = {
+            id: key,
+            name: channelName,
+            details: channelDetails,
+            createdBy: {
+                name: this.props.user.displayName,
+                avatar: this.props.user.photoURL,
+            }
+        }
+
+        channelsRef
+        .child(key)
+        .update(newChannel)
+        .then(() => {
+            this.setState({
+                channelName: '', channelDetails: ''
+            })
+            this.closeModal();
+            console.log('channel added');
+        })
+        .catch(err => console.log(err))
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        if(this.isFormValid(this.state)) {
+            // console.log('channel added');
+            this.addChannel();
+            
+        }
+    }
+
+    isFormValid = ({channelName, channelDetails}) => channelName && channelDetails;
+
 
     render() {
         const {channels, modal} = this.state;
@@ -43,7 +83,7 @@ class Channels extends Component {
             <Modal open={modal} onClose={this.closeModal} style={{background:'#fff'}}>
             <Modal.Header>Add a Channel</Modal.Header>
             <Modal.Content>
-                <Form>
+                <Form onSubmit={this.handleSubmit}>
                     <Form.Field>
                         <Input 
                         fluid 
@@ -66,7 +106,7 @@ class Channels extends Component {
                 <Button color='red' inverted onClick={this.closeModal}>
                     <Icon name='remove'/> Cancel
                 </Button>
-                <Button color='green' inverted>
+                <Button color='green' inverted onClick={this.handleSubmit}>
                     <Icon name='checkmark'/> Add
                 </Button>
             </Modal.Actions>
@@ -76,4 +116,8 @@ class Channels extends Component {
     }
 }
 
-export default Channels;
+const mapStateToProps = state => ({
+    user: state.user.currentUser,
+})
+
+export default connect(mapStateToProps)(Channels);
