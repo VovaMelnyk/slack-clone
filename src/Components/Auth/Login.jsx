@@ -16,7 +16,7 @@ import {
       email: '',
       password: '',
       errors: [],
-      loading: true,
+      loading: false,
     }
 
   
