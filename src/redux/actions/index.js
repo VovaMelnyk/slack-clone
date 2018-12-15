@@ -1,6 +1,6 @@
 import * as actionTypes from './type';
 
-
+// user actions
 export const setUser = user => ({
     type: actionTypes.SET_USER,
     data: {
@@ -10,4 +10,11 @@ export const setUser = user => ({
 
 export const clearUser = () => ({
     type: actionTypes.CLEAR_USER,
+})
+
+// Channel actions 
+
+export const setCurrentChannel = channel => ({
+    type: actionTypes.SET_CURRENT_CHANNEL,
+    data: channel,
 })

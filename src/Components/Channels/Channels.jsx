@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react';
 import firebase from '../../firebase';
 import {connect} from 'react-redux';
+import {setCurrentChannel} from '../../redux/actions'
 
 class Channels extends Component {
 
     state= {
+        activeChannel: '',
         channels : [],
         modal: false,
         channelName: '',
         channelDetails: '',
         channelsRef: firebase.database().ref('channels'),
+        firstLoad: true,
     }
 
     componentDidMount () {
@@ -24,7 +27,28 @@ class Channels extends Component {
             console.log(loadedChanels);
             this.setState({
                 channels: loadedChanels
-            })
+            }, () => {this.loadFirstChannel()})
+        })
+    }
+
+    loadFirstChannel = () => {
+        if(this.state.firstLoad && this.state.channels.length > 0) {
+            this.props.setCurrentChannel(this.state.channels[0]);
+            this.showActiveChannel(this.state.channels[0]);
+        }
+        this.setState({
+            firstLoad: false,
+        })
+    }
+
+    changeChannel = channel => {
+        this.showActiveChannel(channel)
+        this.props.setCurrentChannel(channel)
+    }
+
+    showActiveChannel = channel => {
+        this.setState({
+            activeChannel: channel.id,
         })
     }
 
@@ -99,7 +123,8 @@ class Channels extends Component {
                 key={channel.id}
                 name={channel.name}
                 style={{opacity:0.7}}
-                >
+                onClick={()=>this.changeChannel(channel)}
+                active = {channel.id === this.state.activeChannel}>
                 # {channel.name}    
                 </Menu.Item>
             ))}
@@ -144,4 +169,10 @@ const mapStateToProps = state => ({
     user: state.user.currentUser,
 })
 
-export default connect(mapStateToProps)(Channels);
+const mapDispatchToProps = dispatch => ({
+    setCurrentChannel: function(channel){
+        dispatch(setCurrentChannel(channel))
+    }
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(Channels);
