@@ -3,3 +3,20 @@ html, body, .app {
     padding: 1rem;
     background: #eee;
 }
+
+/* Messages.js */
+.messages {
+    height: 380px;
+    overflow-y: scroll;
+  }
+  
+  /* MessageForm.js */
+  .message__form {
+    position: fixed !important;
+    bottom: 1em;
+    margin-left: 320px !important;
+    left: 0;
+    right: 1em;
+    z-index: 200;
+  }
+  
