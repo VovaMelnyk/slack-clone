@@ -1,22 +1,28 @@
-html, body, .app {
-    height: 100vh;
-    padding: 1rem;
-    background: #eee;
+html,
+body,
+.app {
+  height: 100vh;
+  padding: 1rem;
+  background: #eee;
 }
 
 /* Messages.js */
 .messages {
-    height: 380px;
-    overflow-y: scroll;
-  }
-  
-  /* MessageForm.js */
-  .message__form {
-    position: fixed !important;
-    bottom: 1em;
-    margin-left: 320px !important;
-    left: 0;
-    right: 1em;
-    z-index: 200;
-  }
-  
+  height: 380px;
+  overflow-y: scroll;
+}
+
+/* MessageForm.js */
+.message__form {
+  position: fixed !important;
+  bottom: 1em;
+  margin-left: 320px !important;
+  left: 0;
+  right: 1em;
+  z-index: 200;
+}
+
+.message__self {
+  border-left: 2px solid orange;
+  padding-left: 0.5rem;
+}
