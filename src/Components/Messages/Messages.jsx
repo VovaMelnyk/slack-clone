@@ -23,12 +23,19 @@ class Messages extends Component {
         }, 1000);
     }
 
-    // componentDidUpdate () {
+    componentDidUpdate (prevProps) {
+        
+        if(prevProps.currentChannel && this.props.currentChannel) {
+            if (prevProps.currentChannel.name !== this.props.currentChannel.name) {
+                // this.addListeners(this.props.currentChannel.id)
+               this.addListeners(this.props.currentChannel.id);
+            }
+        }
     //     const {currentChannel, currentUser} = this.props;
     //      if(currentChannel && currentUser) {
     //          this.addListeners(currentChannel.id)
     //      }
-    // }
+    }
 
     addListeners = channelId => {
         let loadedMessages = [];
@@ -44,6 +51,7 @@ class Messages extends Component {
 
 
     render() {
+        // console.log(this.props.currentChannel);
         const {messagesRef, messages} = this.state;
         return (
             <React.Fragment>
