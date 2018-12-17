@@ -2,12 +2,26 @@ import React, {Component} from 'react';
 import {Segment, Input, Button} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import firebase from '../../firebase';
+import FileModal from '../FileModal/FileModal';
 class MessageForm extends Component {
 
   state = {
     message : '',
     loading: false,
     errors: [],
+    modal: false,
+  }
+
+  openModal = () => {
+    this.setState({
+      modal: true,
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      modal: false,
+    })
   }
 
   handleChange = e => {
@@ -72,7 +86,10 @@ class MessageForm extends Component {
             color='teal'
             content='Upload media'
             labelPosition='right'
-            icon='cloud upload'/>
+            icon='cloud upload'
+            onClick={this.openModal}/>
+            <FileModal modal={this.state.modal}
+            closeModal ={this.closeModal}/>
         </Button.Group>
       </Segment>
     );
