@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Segment, Header, Icon, Input} from 'semantic-ui-react';
+import {connect} from 'react-redux';
 
 class MessageHeader extends Component {
   render() {
@@ -14,11 +15,11 @@ class MessageHeader extends Component {
           marginBottom: 0
         }}>
           <span>
-            Channel
+            # {this.props.currentChannel ? this.props.currentChannel.name : 'Channel'}
             <Icon name='star outline' color='black'/>
           </span>
           <Header.Subheader>
-            2 users
+            {this.props.usersAmount}
           </Header.Subheader>
         </Header>
         {/* ChannelSearch input */}
@@ -31,4 +32,8 @@ class MessageHeader extends Component {
   }
 }
 
-export default MessageHeader;
+const mapStateToProps = state => ({
+  currentChannel: state.channel,
+}) 
+
+export default connect(mapStateToProps)(MessageHeader);

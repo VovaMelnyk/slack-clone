@@ -11,7 +11,7 @@ const timeFromNow = time => moment(time).fromNow();
 const isImage = message => message.hasOwnProperty('image') && !message.hasOwnProperty('content')
 
 const SingleMessage = ({message, user}) => {
-  console.log(message.image);
+  // console.log(message.image);
   return (
     <Comment>
       <Comment.Avatar src={message.user.avatar}/>
