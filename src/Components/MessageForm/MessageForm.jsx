@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Segment, Input, Button} from 'semantic-ui-react';
 import {connect} from 'react-redux';
+import uuidv4 from 'uuid/v4'
 import firebase from '../../firebase';
 import FileModal from '../FileModal/FileModal';
 class MessageForm extends Component {
@@ -10,7 +11,15 @@ class MessageForm extends Component {
     loading: false,
     errors: [],
     modal: false,
+    uploadTask: null,
+    storageRef: firebase.storage().ref()
   }
+
+  // componentDidMount() {
+  //   fetch('https://firebasestorage.googleapis.com/v0/b/slack-chat-clone.appspot.com/o/chat%2Fpublic%2Fimaged46b4c7d-724f-479a-9463-f270a80164bc.jpg')
+  //   .then(res=> res.json())
+  //   .then(data => console.log(data))
+  // }
 
   openModal = () => {
     this.setState({
@@ -30,15 +39,21 @@ class MessageForm extends Component {
     })
   }
 
-  createMessage = () => {
+  createMessage = (url = null) => {
     const message = {
-      content: this.state.message,
+      // content: this.state.message,
       time: firebase.database.ServerValue.TIMESTAMP,
       user: {
         id: this.props.currentUser.uid,
         name: this.props.currentUser.displayName,
         avatar: this.props.currentUser.photoURL,
       }
+    }
+
+    if(url !== null) {
+      message['image'] = url
+    } else {
+      message['content'] = this.state.message;
     }
     return message;
   }
@@ -64,7 +79,56 @@ class MessageForm extends Component {
         })
       })
     }
-  } 
+  }
+  
+  uploadFile = (file,metadata) => {
+    // console.log(file, metadata);
+    const pathToUpload = this.props.currentChannel.id;
+    // console.log(pathToUpload);
+    const ref = this.props.messagesRef;
+    const filePath = `chat/public/image${uuidv4()}.jpg`;
+    this.setState({
+      uploadTask: this.state.storageRef.child(filePath).put(file, metadata)
+    }, 
+    ()=> {
+      this.state.uploadTask.on(
+        "state_changed",
+        // snap => {
+        //   const percentUploaded = Math.round(
+        //     (snap.bytesTransferred / snap.totalBytes) * 100
+        //   );
+        //   this.setState({ percentUploaded });
+        // },
+        // err => {
+        //   console.error(err);
+        //   this.setState({
+        //     errors: this.state.errors.concat(err),
+        //     uploadState: "error",
+        //     uploadTask: null
+        //   });
+        // },
+        () => {
+          this.state.uploadTask.snapshot.ref
+            .getDownloadURL()
+            .then(downloadUrl => {
+              this.sendFileMessage(downloadUrl, ref, pathToUpload);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      );
+    })
+  }
+
+  sendFileMessage= (url, ref, path) => {
+    ref.child(path)
+    .push()
+    .set(this.createMessage(url))
+    .catch(err => {
+      console.log(err);
+    })
+  }
 
 
 
@@ -89,7 +153,8 @@ class MessageForm extends Component {
             icon='cloud upload'
             onClick={this.openModal}/>
             <FileModal modal={this.state.modal}
-            closeModal ={this.closeModal}/>
+            closeModal ={this.closeModal}
+            uploadFile={this.uploadFile}/>
         </Button.Group>
       </Segment>
     );
