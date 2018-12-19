@@ -13,6 +13,8 @@ class Messages extends Component {
         messages: [],
         loading: true,
         countUser: '',
+        searchTerm: '',
+        searchMessages: [],
     }
 
     componentDidMount () {
@@ -64,20 +66,42 @@ class Messages extends Component {
         })
     }
 
+    hendleSearch =  async (e) => {
+        await this.setState({
+            searchTerm: e.target.value,
+        })
+        this.searchMessage()
+    }
+
+    searchMessage = () => {
+        let searchResult = this.state.messages.filter(el => {
+            if(el.content) {
+                return el.content.includes(this.state.searchTerm)
+            }
+        });
+        this.setState({
+            searchMessages: searchResult,
+        })
+    }
+
+    paintMessages = messages => {
+       return messages.map(message => <SingleMessage
+            key={message.time}
+            message={message}
+            user={message.user}
+            />)
+    }
+
 
     render() {
         // console.log(this.props.currentChannel);
-        const {messagesRef, messages} = this.state;
+        const {messagesRef, messages, searchTerm, searchMessages} = this.state;
         return (
             <React.Fragment>
-                <MessageHeader usersAmount={this.state.countUser}/>
+                <MessageHeader usersAmount={this.state.countUser} hendleSearch= {this.hendleSearch}/>
                 <Segment>
                     <Comment.Group className='messages'>
-                        {messages.length > 0 && messages.map(message => <SingleMessage
-                        key={message.time}
-                        message={message}
-                        user={message.user}
-                        /> )}
+                        {messages.length > 0 && !searchTerm ? this.paintMessages(messages) : this.paintMessages(searchMessages)}
 
                     </Comment.Group>
                 </Segment>

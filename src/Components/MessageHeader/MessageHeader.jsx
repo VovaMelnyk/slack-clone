@@ -24,7 +24,7 @@ class MessageHeader extends Component {
         </Header>
         {/* ChannelSearch input */}
         <Header floated='right'>
-          <Input size='mini' icon='search' name='searchTerm' placeholder='Search'/>
+          <Input size='mini' icon='search' name='searchTerm' placeholder='Search' onChange={this.props.hendleSearch}/>
         </Header>
 
       </Segment>
