@@ -68,6 +68,8 @@ class Register extends Component {
     })
   }
 
+
+
   handleSubmit = (e) => {
     e.preventDefault();
     if (this.isFormValid()) {
@@ -101,7 +103,6 @@ class Register extends Component {
   handleInput = (errors, inputName) => {
     return errors.some(el => el.message.toLowerCase().includes(inputName)) ? 'error' : ''
    }
- 
 
 
   render() {
