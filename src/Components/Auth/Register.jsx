@@ -27,6 +27,7 @@ class Register extends Component {
 
       handleSubmit = (e) => {
         e.preventDefault();
+        // console.log(firebase);
         firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
