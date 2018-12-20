@@ -46,7 +46,7 @@ class Register extends Component {
                     placeholder='Password'
                     type='password'/>
     
-                  <Form.Input
+                   <Form.Input
                     fluid
                     name='passwordConfirm'
                     icon='repeat'
