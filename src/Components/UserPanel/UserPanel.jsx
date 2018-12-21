@@ -5,16 +5,16 @@ class UserPanel extends Component {
     dropdownOptions = () => [
         {
             key: 'user',
-            text: <span>Signed in as <strong>User</strong></span>,
+            text: <span> <Icon name='sign-in'/>Signed in as <strong>User</strong></span>,
             disabled: true,
         },
         {
             key: 'avatar',
-            text: <span>Change Avatar</span>
+            text: <span> <Icon name='picture'/>Change Avatar</span>
         },
         {
             key: 'out',
-            text: <span>Sign Out</span>
+            text:  <span><Icon name='sign-out'/>Sign Out</span>
         }
     ]
   render() {
