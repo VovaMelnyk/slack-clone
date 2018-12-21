@@ -7,3 +7,4 @@ export const setUser = user => ({
         currentUser: user,
     }
 })
+
