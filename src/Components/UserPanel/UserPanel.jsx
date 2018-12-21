@@ -53,7 +53,7 @@ class UserPanel extends Component {
               as='h4'
               inverted>
               <Dropdown
-                trigger={< span > <Image src={this.props.currentUser.photoURL} spaced='right' avatar/>
+                trigger={<span> <Image src={this.props.currentUser.photoURL} spaced='right' avatar/>
                 {this.props.currentUser.displayName}</span>}
                 options={this.dropdownOptions()}/>
             </Header>
