@@ -120,7 +120,7 @@ class Channels extends Component {
         const {channels, modal} = this.state;
         return (
             <React.Fragment>
-            <Menu.Menu style={{paddingBottom:'2rem'}}>
+            <Menu.Menu className='menu'>
             <Menu.Item>
                 <span>
                     <Icon name='exchange'/> CHANNELS
