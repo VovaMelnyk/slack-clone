@@ -23,3 +23,14 @@ export const setPrivateChannel = isPrivateChannel => ({
       type: actionTypes.SET_PRIVATE_CHANNEL,
       data: isPrivateChannel,
   });
+
+  /* Colors Actions */
+export const setColors = (primaryColor, secondaryColor) => {
+    return {
+      type: actionTypes.SET_COLORS,
+      payload: {
+        primaryColor,
+        secondaryColor
+      }
+    };
+  };

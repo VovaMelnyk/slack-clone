@@ -1,6 +1,7 @@
 import React from "react";
 import firebase from "../../firebase";
 import {connect} from 'react-redux';
+import {setColors} from '../../redux/actions';
 import {
   Sidebar,
   Menu,
@@ -18,8 +19,24 @@ class ColorPanel extends React.Component {
     modal: false,
     primary: '',
     secondary: '',
-    usersRef: firebase.database().ref("users")
+    usersRef: firebase.database().ref("users"),
+    userColors: [],
   };
+
+  componentDidMount() {
+    if (this.props.user) {
+      this.addListener(this.props.user.currentUser.uid);
+    }
+  }
+
+  addListener = userId => {
+    let userColors = [];
+    this.state.usersRef.child(`${userId}/colors`).on("child_added", snap => {
+      userColors.unshift(snap.val());
+      this.setState({ userColors });
+    });
+  }
+  
 
   openModal = () => this.setState({ modal: true });
 
@@ -54,9 +71,28 @@ class ColorPanel extends React.Component {
       .catch(err => console.error(err));
   };
 
+  displayUserColors = colors =>
+    colors.length > 0 &&
+    colors.map((color, i) => (
+      <React.Fragment key={i}>
+        <Divider />
+        <div
+          className="color__container"
+          onClick={() => this.props.setColors(color.primary, color.secondary)}
+        >
+          <div className="color__square" style={{ background: color.primary }}>
+            <div
+              className="color__overlay"
+              style={{ background: color.secondary }}
+            />
+          </div>
+        </div>
+      </React.Fragment>
+    ));
+
 
   render() {
-    const { modal, primary, secondary } = this.state;
+    const { modal, primary, secondary,userColors } = this.state;
 
     return (
       <Sidebar
@@ -69,7 +105,7 @@ class ColorPanel extends React.Component {
       >
         <Divider />
         <Button icon="add" size="small" color="blue" onClick={this.openModal} />
-
+        {this.displayUserColors(userColors)}
         {/* Color Picker Modal */}
         <Modal basic open={modal} onClose={this.closeModal}>
           <Modal.Header>Choose App Colors</Modal.Header>
@@ -101,4 +137,4 @@ const MSTP = state => ({
     user: state.user
 })
 
-export default connect(MSTP)(ColorPanel);
+export default connect(MSTP, { setColors })(ColorPanel);
