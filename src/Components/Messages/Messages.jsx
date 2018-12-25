@@ -30,21 +30,16 @@ class Messages extends Component {
         
         if(prevProps.currentChannel && this.props.currentChannel) {
             if (prevProps.currentChannel.name !== this.props.currentChannel.name) {
-                // this.addListeners(this.props.currentChannel.id)
                this.addListeners(this.props.currentChannel.id);
             }
         }
-    //     const {currentChannel, currentUser} = this.props;
-    //      if(currentChannel && currentUser) {
-    //          this.addListeners(currentChannel.id)
-    //      }
     }
 
     addListeners = channelId => {
         let loadedMessages = [];
+        // console.log(this.state.messagesRef);
         this.state.messagesRef.child(channelId).on('child_added', snap => {
             loadedMessages.push(snap.val())
-            // console.log(loadedMessages);
             this.setState({
                 messages: loadedMessages,
                 loading: false
