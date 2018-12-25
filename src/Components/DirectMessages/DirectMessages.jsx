@@ -78,7 +78,7 @@ class DirectMessages extends React.Component {
           </span> ({ users.length })
         </Menu.Item>
         {/* Users to Send Direct Messages */}
-          {users.map(el => <Menu.Item
+          {users.length > 0 && users.map(el => <Menu.Item
           key={el.uid}
           onClick={()=> console.log(el)}
           style={{opacity:0.7, fontStyle: 'italic'}}
