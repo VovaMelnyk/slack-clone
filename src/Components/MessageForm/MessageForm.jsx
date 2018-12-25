@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Segment, Input, Button} from 'semantic-ui-react';
 import {connect} from 'react-redux';
-import uuidv4 from 'uuid/v4'
+import uuidv4 from 'uuid/v4';
 import firebase from '../../firebase';
 import FileModal from '../FileModal/FileModal';
 class MessageForm extends Component {
@@ -82,9 +82,7 @@ class MessageForm extends Component {
   }
   
   uploadFile = (file,metadata) => {
-    // console.log(file, metadata);
     const pathToUpload = this.props.currentChannel.id;
-    // console.log(pathToUpload);
     const ref = this.props.messagesRef;
     const filePath = `chat/public/image${uuidv4()}.jpg`;
     this.setState({
@@ -93,20 +91,6 @@ class MessageForm extends Component {
     ()=> {
       this.state.uploadTask.on(
         "state_changed",
-        // snap => {
-        //   const percentUploaded = Math.round(
-        //     (snap.bytesTransferred / snap.totalBytes) * 100
-        //   );
-        //   this.setState({ percentUploaded });
-        // },
-        // err => {
-        //   console.error(err);
-        //   this.setState({
-        //     errors: this.state.errors.concat(err),
-        //     uploadState: "error",
-        //     uploadTask: null
-        //   });
-        // },
         () => {
           this.state.uploadTask.snapshot.ref
             .getDownloadURL()
