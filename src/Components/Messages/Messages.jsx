@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { Segment, Comment } from 'semantic-ui-react';
 import {connect} from 'react-redux';
+// import { css } from 'glamor';
+// import ScrollToBottom from 'react-scroll-to-bottom';
 import firebase from '../../firebase';
 import MessageForm from '../MessageForm/MessageForm';
 import MessageHeader from '../MessageHeader/MessageHeader';
 import SingleMessage from '../SingleMessage/SingleMessage';
+
+
+// const ROOT_CSS = css({
+//     height: 380,
+//   });
 
 class Messages extends Component {
 
@@ -22,8 +29,10 @@ class Messages extends Component {
             const {currentChannel, currentUser} = this.props;
          if(currentChannel && currentUser) {
              this.addListeners(currentChannel.id)
+             this.scrollToBottom();
          }
         }, 1000);
+        
     }
 
     componentDidUpdate (prevProps) {
@@ -34,11 +43,14 @@ class Messages extends Component {
                this.addListeners(this.props.currentChannel.id);
             }
         }
-    //     const {currentChannel, currentUser} = this.props;
-    //      if(currentChannel && currentUser) {
-    //          this.addListeners(currentChannel.id)
-    //      }
+        if (this.messagesEnd) {
+            this.scrollToBottom();
+          }
     }
+
+    scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+      };
 
     addListeners = channelId => {
         let loadedMessages = [];
@@ -101,8 +113,10 @@ class Messages extends Component {
                 <MessageHeader usersAmount={this.state.countUser} hendleSearch= {this.hendleSearch}/>
                 <Segment>
                     <Comment.Group className='messages'>
+                    {/* <ScrollToBottom className={ ROOT_CSS }> */}
                         {messages.length > 0 && !searchTerm ? this.paintMessages(messages) : this.paintMessages(searchMessages)}
-
+                        <div ref={node => (this.messagesEnd = node)} />
+                        {/* </ScrollToBottom> */}
                     </Comment.Group>
                 </Segment>
                 <MessageForm messagesRef = {messagesRef}/>

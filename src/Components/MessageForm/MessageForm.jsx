@@ -93,20 +93,6 @@ class MessageForm extends Component {
     ()=> {
       this.state.uploadTask.on(
         "state_changed",
-        // snap => {
-        //   const percentUploaded = Math.round(
-        //     (snap.bytesTransferred / snap.totalBytes) * 100
-        //   );
-        //   this.setState({ percentUploaded });
-        // },
-        // err => {
-        //   console.error(err);
-        //   this.setState({
-        //     errors: this.state.errors.concat(err),
-        //     uploadState: "error",
-        //     uploadTask: null
-        //   });
-        // },
         () => {
           this.state.uploadTask.snapshot.ref
             .getDownloadURL()
@@ -130,6 +116,12 @@ class MessageForm extends Component {
     })
   }
 
+  handleKeyDown = event => {
+    if (event.ctrlKey && event.keyCode === 13) {
+      this.sendMessage();
+    }
+  }
+
 
 
   render() {
@@ -139,6 +131,7 @@ class MessageForm extends Component {
           fluid
           name='message'
           onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
           style={{marginBottom: '0.7rem'}}
           label={< Button icon = 'add' />}
           labelPosition='left'
